@@ -116,6 +116,18 @@ actions:
 
 <img width="300px" src="./docs/notification.jpg" alt="Image" />
 
+
+### Updating deliveries via Automation
+
+```yaml
+alias: Update Deliveries
+trigger:
+  - platform: time_pattern
+    minutes: "/30"  # Runs every 30 minutes
+action:
+  - service: package_deliveries.update_deliveries
+```
+
 ## Installation
 
 1. **Download the Files:**

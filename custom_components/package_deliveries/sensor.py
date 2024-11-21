@@ -20,11 +20,18 @@ class PackageDeliveriesSensor(Entity):
             "custom_components", "package_deliveries", "custom_scripts", "deliveries.json"
         )
         self.scan_interval = timedelta(seconds=config.get("scan_interval", 180))
+        self._unique_id = "package_deliveries_sensor"
 
     @property
     def name(self):
         """Return the name of the sensor."""
         return "Package Deliveries"
+    
+
+    @property
+    def unique_id(self):
+        """Return the unique ID of the sensor."""
+        return self._unique_id
 
     @property
     def state(self):
@@ -75,4 +82,8 @@ class PackageDeliveriesSensor(Entity):
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the sensor platform."""
-    async_add_entities([PackageDeliveriesSensor(hass, config)], True)
+    sensor = PackageDeliveriesSensor(hass, config)
+    async_add_entities([sensor], True)
+
+    # Store the sensor in `hass.data` for later reference
+    hass.data[DOMAIN] = {"sensor_package_deliveries": sensor}

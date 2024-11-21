@@ -117,12 +117,14 @@ actions:
 ### Updating deliveries via Automation
 
 ```yaml
-alias: Update Deliveries
+alias: Update Package Deliveries
 trigger:
   - platform: time_pattern
-    minutes: "/30"  # Runs every 30 minutes
+    minutes: "/30"  # Run every 30 minutes
 action:
   - service: package_deliveries.update_deliveries
+    data:
+      name: "Package Deliveries Main"
 ```
 
 ## Installation
@@ -135,7 +137,7 @@ action:
         ```yaml
             sensor:
               - platform: package_deliveries
-                name: "Main Package Deliveries"
+                name: "Package Deliveries Main"
                 email: !secret package_deliveries_email
                 password: !secret package_deliveries_app_password
                 smtp_server: "imap.gmail.com"

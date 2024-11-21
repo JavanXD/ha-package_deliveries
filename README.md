@@ -58,7 +58,7 @@ In den letzten 7 Tagen: **{{ deliveries | length }} Lieferungen**
 {% endif %}
 ```
 
-<img width="300px" src="./docs/markdown.jpg" alt="Image" />
+<img width="300px" src="https://raw.githubusercontent.com/JavanXD/ha-package_deliveries/refs/heads/main/docs/markdown.jpg" alt="Image" />
 
 ### Every morning one push Notification with today's deliveries
 
@@ -111,7 +111,7 @@ actions:
     action: notify.all_apps
 ```
 
-<img width="300px" src="./docs/notification.jpg" alt="Image" />
+<img width="300px" src="https://raw.githubusercontent.com/JavanXD/ha-package_deliveries/refs/heads/main/docs/notification.jpg" alt="Image" />
 
 
 ### Updating deliveries via Automation

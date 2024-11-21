@@ -4,11 +4,7 @@
   "version": "1.0",
   "documentation": "https://github.com/JavanXD/homeassistant-custom_components",
   "issue_tracker": "https://github.com/JavanXD/homeassistant-custom_components/issues",
-  "requirements": [
-    "imaplib", 
-    "email", 
-    "zoneinfo"
-  ],
+  "requirements": [],
   "dependencies": [],
   "codeowners": ["@JavanXD"],
   "iot_class": "cloud_polling"

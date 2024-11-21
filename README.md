@@ -1,4 +1,14 @@
-# Home Assistant - Package Deliveries Custom Component
+# Home Assistant - Package Deliveries Integration
+
+
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+<!--[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)-->
+![GitHub Release](https://img.shields.io/github/v/release/JavanXD/ha-package_deliveries?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/JavanXD/ha-package_deliveries?style=for-the-badge)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/JavanXD/ha-package_deliveries?style=for-the-badge)
+![Maintenance](https://img.shields.io/maintenance/yes/2024?style=for-the-badge)
+
+Home Assistant (https://www.home-assistant.io) Integration component.
 
 This custom component allows you to track your package deliveries from various providers (Amazon, DHL, DPD, etc.) by parsing email notifications. The sensor displays the number of active deliveries and detailed attributes for each package.
 
@@ -11,18 +21,18 @@ This custom component allows you to track your package deliveries from various p
 
 ## Current Limitations / To-Dos
 
-- Is only able to parse Emails in **German language**
-- Hermes, GLS and UPS notifications are missing
-- You need to have an account at those delivery services and need to have enabled that they notify you via email
-- Only supporting one email account at the time
+- Is only able to parse Emails in **German language**.
+- Hermes, GLS and UPS notifications are missing.
+- You need to have an account at those delivery services and need to have enabled that they notify you via email.
+- Only supporting one email account at the time.
 
 ## Why a component for this?
 
-- Too many email notifications, missing oversight in email inbox
-- Multiple email notifications for the same parcel
-- Email notifications from both DHL and Amazon for the same parcel, which needed merging
-- One single source of truth by parsing all relevant info and merging it into single entries per tracking number
-- One source of relevant delivery data for everyone in the household
+- Too many email notifications, missing oversight in email inbox.
+- Multiple email notifications for the same parcel.
+- Email notifications from both DHL and Amazon for the same parcel, which needed merging.
+- One single source of truth by parsing all relevant info and merging it into single entries per tracking number.
+- One source of relevant delivery data for everyone in the household.
 
 ## Use-Cases in the Homeassistant Dashboard
 

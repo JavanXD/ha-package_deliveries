@@ -1,7 +1,6 @@
+import datetime
 from datetime import timedelta
 from homeassistant.helpers.entity import Entity
-
-SCAN_INTERVAL = timedelta(minutes=3)
 
 
 class PackageDeliveriesSensor(Entity):
@@ -19,7 +18,12 @@ class PackageDeliveriesSensor(Entity):
         self.json_file_path = hass.config.path(
             "custom_components", "package_deliveries", "custom_scripts", f"deliveries_{self.config['name'].lower().replace(' ', '_')}.json"
         )
-        self.scan_interval = timedelta(seconds=config.get("scan_interval", 180))
+        scan_interval = config.get("scan_interval", 180)
+        if isinstance(scan_interval, timedelta):
+            self.scan_interval = scan_interval
+        else:
+            self.scan_interval = timedelta(seconds=int(scan_interval))
+
         self._unique_id = config["name"].lower().replace(" ", "_")
         self._name = config["name"]
 

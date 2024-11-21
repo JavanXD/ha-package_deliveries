@@ -1,26 +1,22 @@
-# Home Assistant - My custom components
-
-My own custom components for Home Assistant.
-
-## Package Deliveries Custom Component
+# Home Assistant - Package Deliveries Custom Component
 
 This custom component allows you to track your package deliveries from various providers (Amazon, DHL, DPD, etc.) by parsing email notifications. The sensor displays the number of active deliveries and detailed attributes for each package.
 
-### Features
+## Features
 
 - Fetches package delivery information from email accounts.
 - Supports Amazon, DHL, and DPD delivery services.
 - Configurable parameters for folder selection, date range, and email limits.
 - Displays delivery details as sensor attributes.
 
-### Current Limitations / To-Dos
+## Current Limitations / To-Dos
 
-- Is only able to parse Emails in German language
+- Is only able to parse Emails in **German language**
 - Hermes, GLS and UPS notifications are missing
 - You need to have an account at those delivery services and need to have enabled that they notify you via email
 - Only supporting one email account at the time
 
-### Why a component for this?
+## Why a component for this?
 
 - Too many email notifications, missing oversight in email inbox
 - Multiple email notifications for the same parcel
@@ -28,9 +24,9 @@ This custom component allows you to track your package deliveries from various p
 - One single source of truth by parsing all relevant info and merging it into single entries per tracking number
 - One source of relevant delivery data for everyone in the household
 
-### Use-Cases in the Homeassistant Dashboard
+## Use-Cases in the Homeassistant Dashboard
 
-#### Markdown Card to show previous and upcoming deliveries
+### Markdown Card to show previous and upcoming deliveries
 
 Template:
 
@@ -57,7 +53,7 @@ In den letzten 7 Tagen: **{{ deliveries | length }} Lieferungen**
 
 <img width="300px" src="./docs/markdown.jpg" alt="Image" />
 
-#### Every morning one push Notification with today's deliveries
+### Every morning one push Notification with today's deliveries
 
 ```yaml
 alias: Benachrichtige über heutige Paketlieferungen
@@ -110,7 +106,7 @@ actions:
 
 <img width="300px" src="./docs/notification.jpg" alt="Image" />
 
-### Installation
+## Installation
 
 1. **Download the Files:**
    - Copy the `custom_components/package_deliveries` directory to your Home Assistant's `custom_components` directory.
@@ -119,17 +115,16 @@ actions:
    - Add the following configuration to your `configuration.yaml` file:
         ```yaml
             sensor:
-            - platform: package_deliveries
+              - platform: package_deliveries
                 email: !secret package_deliveries_email
                 password: !secret package_deliveries_app_password
                 smtp_server: "imap.gmail.com"
-                smtp_port: 993
                 last_days: 10
                 last_emails: 50
                 imap_folder: "Bestellungen/Lieferdienst" # for Gmail default is INBOX if you do not use filters to move emails in sub-folders
                 scan_interval: 180
         ```
-    - Replace the placeholders (your_email, your_password, etc.) with your actual email account credentials and parameters.
+    - Replace the placeholders (package_deliveries_email, package_deliveries_app_password, etc.) with your actual email account credentials and parameters.
 3.	**Restart Home Assistant**:
     - Restart Home Assistant for the custom component to load.
 4.	**Add Secrets**:
@@ -140,25 +135,17 @@ actions:
     package_deliveries_app_password: "app_specific_password" # Needs to be an app passwod, not your google accounts password.
     ```
 
-### CLI
+## CLI Option 
 
-```cli
-cd homeassistant-custom_components/package_deliveries/custom_scripts
-python3 check_package_deliveries.py --email "XXX" --password "XXX" --imap_folder "Bestellungen/Lieferdienst" --output_file "package_deliveries.json"
+For debugging or for manual testing of the parsing rules:
+
+```bash
+cd ha-package_deliveries/custom_components/package_deliveries/custom_scripts
+python3 check_package_deliveries.py --email "XXX" --password "XXX" --imap_folder "Bestellungen/Lieferdienst" --output_file "deliveries_by_cli.json"
 ```
 
-### Configuration Parameters
 
-- email: Email address to log in to.
-- password: Password for the email account (use an app-specific password if needed).
-- smtp_server: IMAP server (default: imap.gmail.com).
-- smtp_port: IMAP server port (default: 993).
-- last_days: Number of days to look back for emails.
-- last_emails: Maximum number of emails to process.
-- imap_folder: IMAP folder to monitor (e.g., Bestellungen/Lieferdienst).
-- scan_interval: Interval (in seconds) to update the sensor.
-
-### Example Output
+## Example Output
 
 The Package Deliveries sensor will show the total number of active deliveries. Additional details will appear as attributes:
 

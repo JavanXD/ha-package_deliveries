@@ -1,7 +1,8 @@
-from homeassistant.helpers.entity import Entity
 from datetime import timedelta
+from homeassistant.helpers.entity import Entity
 
 SCAN_INTERVAL = timedelta(minutes=3)
+
 
 class PackageDeliveriesSensor(Entity):
     """Sensor for tracking package deliveries via email."""
@@ -16,15 +17,16 @@ class PackageDeliveriesSensor(Entity):
             "custom_components", "package_deliveries", "custom_scripts", "check_package_deliveries.py"
         )
         self.json_file_path = hass.config.path(
-            "custom_components", "package_deliveries", "custom_scripts", "deliveries.json"
+            "custom_components", "package_deliveries", "custom_scripts", f"deliveries_{self.config['name'].lower().replace(' ', '_')}.json"
         )
         self.scan_interval = timedelta(seconds=config.get("scan_interval", 180))
-        self._unique_id = "package_deliveries_sensor"
+        self._unique_id = config["name"].lower().replace(" ", "_")
+        self._name = config["name"]
 
     @property
     def name(self):
         """Return the name of the sensor."""
-        return "Package Deliveries"
+        return self._name
 
     @property
     def unique_id(self):
@@ -72,7 +74,7 @@ class PackageDeliveriesSensor(Entity):
                     self._attributes["deliveries"] = deliveries
             else:
                 self._state = "Error"
-                self._attributes["error"] = "deliveries.json file not found"
+                self._attributes["error"] = f"{self.json_file_path} file not found"
 
         except subprocess.CalledProcessError as e:
             self._state = "Error"
@@ -85,8 +87,13 @@ class PackageDeliveriesSensor(Entity):
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the sensor platform."""
+    # Ensure the "name" field is provided
+    if "name" not in config:
+        raise ValueError("The 'name' field is required for the package_deliveries sensor.")
+
     sensor = PackageDeliveriesSensor(hass, config)
     async_add_entities([sensor], True)
 
-    # Store the sensor in `hass.data` for later reference
-    hass.data["package_deliveries"] = {"sensor_package_deliveries": sensor}
+    # Store each sensor in `hass.data` for later reference
+    hass.data.setdefault("package_deliveries", {})
+    hass.data["package_deliveries"][sensor.unique_id] = sensor

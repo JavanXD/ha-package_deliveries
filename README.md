@@ -135,6 +135,7 @@ action:
         ```yaml
             sensor:
               - platform: package_deliveries
+                name: "Main Package Deliveries"
                 email: !secret package_deliveries_email
                 password: !secret package_deliveries_app_password
                 smtp_server: "imap.gmail.com"

@@ -40,7 +40,7 @@ Template:
 ```yaml
 {% set deliveries = state_attr('sensor.package_deliveries', 'deliveries') %}
 {% if deliveries is not none %}
-  {% set deliveries = deliveries | from_json %}
+  {% set deliveries = deliveries %}
 {% else %}
   No deliveries data available.
 {% endif %}
@@ -78,7 +78,7 @@ conditions:
       weekdays[today.weekday()] %} {% set day = today.day %} {% set month =
       months[today.month - 1] %} {% set today_german = weekday ~ ', ' ~ day ~ '.
       ' ~ month %} {% set deliveries = state_attr('sensor.package_deliveries',
-      'deliveries') | from_json %} {% if deliveries %}
+      'deliveries') %} {% if deliveries %}
         {{ deliveries | selectattr('delivery_date', 'eq', today_german) | list | length > 0 }}
       {% else %}
         false
@@ -93,7 +93,7 @@ actions:
       title: 📦 Paketlieferungen für heute
       message: >
         {% set deliveries = state_attr('sensor.package_deliveries',
-        'deliveries') | from_json %} {% set weekdays = ["Montag", "Dienstag",
+        'deliveries') %} {% set weekdays = ["Montag", "Dienstag",
         "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"] %} {% set
         months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
         "August", "September", "Oktober", "November", "Dezember"] %} {% set

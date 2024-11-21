@@ -1,8 +1,7 @@
-import os
-import subprocess
-import json
-from datetime import timedelta
 from homeassistant.helpers.entity import Entity
+from datetime import timedelta
+
+SCAN_INTERVAL = timedelta(minutes=3)
 
 class PackageDeliveriesSensor(Entity):
     """Sensor for tracking package deliveries via email."""
@@ -26,7 +25,6 @@ class PackageDeliveriesSensor(Entity):
     def name(self):
         """Return the name of the sensor."""
         return "Package Deliveries"
-    
 
     @property
     def unique_id(self):
@@ -45,7 +43,12 @@ class PackageDeliveriesSensor(Entity):
 
     def update(self):
         """Call the script, then update the sensor from the JSON file."""
-        # Step 1: Build the command dynamically from the config
+        # Lazy imports to avoid blocking the event loop
+        import subprocess
+        import json
+        import os
+
+        # Build the command dynamically from the config
         command = [
             "python3", self.script_path,
             "--email", self.config.get("email"),
@@ -58,10 +61,10 @@ class PackageDeliveriesSensor(Entity):
         ]
 
         try:
-            # Step 2: Call the script
+            # Step 1: Call the script
             subprocess.run(command, check=True)
 
-            # Step 3: Read the JSON file to update the sensor state and attributes
+            # Step 2: Read the JSON file to update the sensor state and attributes
             if os.path.exists(self.json_file_path):
                 with open(self.json_file_path, "r") as json_file:
                     deliveries = json.load(json_file)
@@ -86,4 +89,4 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     async_add_entities([sensor], True)
 
     # Store the sensor in `hass.data` for later reference
-    hass.data[DOMAIN] = {"sensor_package_deliveries": sensor}
+    hass.data["package_deliveries"] = {"sensor_package_deliveries": sensor}

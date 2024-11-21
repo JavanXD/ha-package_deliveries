@@ -7,9 +7,9 @@ Licensed under MIT. All rights reserved.
 
 """
 
-"""The Package Deliveries custom component."""
 
 import logging
+from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
 
 DOMAIN = "package_deliveries"
 _LOGGER = logging.getLogger(__name__)
@@ -19,8 +19,8 @@ async def async_setup(hass, config):
 
     async def handle_update_deliveries(call):
         """Handle the update deliveries service."""
-        # Use Home Assistant's entity registry to find the sensor
-        registry = await hass.helpers.entity_registry.async_get(hass)
+        # Access the entity registry using the updated method
+        registry = async_get_entity_registry(hass)
         entity = registry.async_get("sensor.package_deliveries")
 
         if entity:

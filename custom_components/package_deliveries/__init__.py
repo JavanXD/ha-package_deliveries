@@ -8,10 +8,18 @@ Licensed under MIT. All rights reserved.
 """
 
 import logging
+import voluptuous as vol
 from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
+from homeassistant.helpers import config_validation as cv
 
 DOMAIN = "package_deliveries"
 _LOGGER = logging.getLogger(__name__)
+
+# Define the schema for the service
+UPDATE_DELIVERIES_SCHEMA = vol.Schema({
+    vol.Required("name"): cv.string,
+})
+
 
 async def async_setup(hass, config):
     """Set up the Package Deliveries component."""
@@ -42,14 +50,12 @@ async def async_setup(hass, config):
         else:
             _LOGGER.warning(f"Sensor '{sensor_name}' not found in the entity registry.")
 
-    # Register the service
+    # Register the service with the correct schema
     hass.services.async_register(
         DOMAIN,
         "update_deliveries",
         handle_update_deliveries,
-        schema={
-            "name": str,
-        },
+        schema=UPDATE_DELIVERIES_SCHEMA,
     )
 
     # Store sensor references for later use

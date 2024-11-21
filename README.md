@@ -1,9 +1,6 @@
 # Home Assistant - Package Deliveries Integration
 
-
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
-<!--[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)-->
-![GitHub Release](https://img.shields.io/github/v/release/JavanXD/ha-package_deliveries?style=for-the-badge)
 ![GitHub License](https://img.shields.io/github/license/JavanXD/ha-package_deliveries?style=for-the-badge)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/JavanXD/ha-package_deliveries?style=for-the-badge)
 ![Maintenance](https://img.shields.io/maintenance/yes/2024?style=for-the-badge)

@@ -437,7 +437,6 @@ if __name__ == "__main__":
     parser.add_argument("--email", required=True, help="Email address to log in to.")
     parser.add_argument("--password", required=True, help="Needs to be an app passwod, not your google accounts password.")
     parser.add_argument("--smtp_server", default="imap.gmail.com", help="SMTP server.")
-    parser.add_argument("--smtp_port", type=int, default=993, help="SMTP server port.")
     parser.add_argument("--last_days", type=int, default=10, help="Number of days to look back.")
     parser.add_argument("--last_emails", type=int, default=50, help="Maximum number of emails to process.")
     parser.add_argument("--imap_folder", default="INBOX", help="IMAP folder to search.")

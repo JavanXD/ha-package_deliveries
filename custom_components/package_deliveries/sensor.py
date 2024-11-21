@@ -44,7 +44,6 @@ class PackageDeliveriesSensor(Entity):
             "--email", self.config.get("email"),
             "--password", self.config.get("password"),
             "--smtp_server", self.config.get("smtp_server", "imap.gmail.com"),
-            "--smtp_port", str(self.config.get("smtp_port", 993)),
             "--last_days", str(self.config.get("last_days", 10)),
             "--last_emails", str(self.config.get("last_emails", 50)),
             "--imap_folder", self.config.get("imap_folder", "INBOX"),

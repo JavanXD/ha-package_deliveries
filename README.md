@@ -140,7 +140,7 @@ action:
                 name: "Package Deliveries Main"
                 email: !secret package_deliveries_email
                 password: !secret package_deliveries_app_password
-                smtp_server: "imap.gmail.com"
+                imap_server: "imap.gmail.com"
                 last_days: 10
                 last_emails: 50
                 imap_folder: "Bestellungen/Lieferdienst" # for Gmail default is INBOX if you do not use filters to move emails in sub-folders

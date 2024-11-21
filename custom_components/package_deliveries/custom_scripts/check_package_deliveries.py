@@ -425,7 +425,7 @@ def merge_duplicate_deliveries(deliveries):
 
 def init_imap_connection(args):
     # Initialize IMAP connection
-    mail = imaplib.IMAP4_SSL(args.smtp_server)
+    mail = imaplib.IMAP4_SSL(args.imap_server)
     mail.login(args.email, args.password)
     mail.select(args.imap_folder)
 
@@ -436,11 +436,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Check package deliveries via email.")
     parser.add_argument("--email", required=True, help="Email address to log in to.")
     parser.add_argument("--password", required=True, help="Needs to be an app passwod, not your google accounts password.")
-    parser.add_argument("--smtp_server", default="imap.gmail.com", help="SMTP server.")
+    parser.add_argument("--imap_server", default="imap.gmail.com", help="IMAP email server.")
     parser.add_argument("--last_days", type=int, default=10, help="Number of days to look back.")
     parser.add_argument("--last_emails", type=int, default=50, help="Maximum number of emails to process.")
     parser.add_argument("--imap_folder", default="INBOX", help="IMAP folder to search.")
-    parser.add_argument("--output_file", default="package_deliveries.json", help="Path to save the deliveries JSON.")
+    parser.add_argument("--output_file", default="deliveries.json", help="Path to save the deliveries JSON.")
 
     args = parser.parse_args()
 

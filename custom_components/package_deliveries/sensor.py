@@ -59,7 +59,7 @@ class PackageDeliveriesSensor(Entity):
             "python3", self.script_path,
             "--email", self.config.get("email"),
             "--password", self.config.get("password"),
-            "--smtp_server", self.config.get("smtp_server", "imap.gmail.com"),
+            "--imap_server", self.config.get("imap_server", "imap.gmail.com"),
             "--last_days", str(self.config.get("last_days", 10)),
             "--last_emails", str(self.config.get("last_emails", 50)),
             "--imap_folder", self.config.get("imap_folder", "INBOX"),

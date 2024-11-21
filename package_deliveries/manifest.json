@@ -1,0 +1,15 @@
+{
+  "domain": "package_deliveries",
+  "name": "Package Deliveries",
+  "version": "1.0",
+  "documentation": "https://github.com/JavanXD/homeassistant-custom_components",
+  "issue_tracker": "https://github.com/JavanXD/homeassistant-custom_components/issues",
+  "requirements": [
+    "imaplib", 
+    "email", 
+    "zoneinfo"
+  ],
+  "dependencies": [],
+  "codeowners": ["@JavanXD"],
+  "iot_class": "cloud_polling"
+}

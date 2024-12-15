@@ -7,6 +7,8 @@ import html
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo  # Python 3.9+ provides zoneinfo for timezone handling
 import argparse
+from urllib.parse import urlparse, parse_qs
+
 
 
 # ANSI escape codes for coloring
@@ -241,22 +243,29 @@ def extract_amazon_delivery(email_subject, email_msg, email_date):
     except Exception as e:
         print(f"{FAIL}Error extracting Amazon delivery: {e}{ENDC}")
 
+import re
+
 def extract_dhl_delivery(email_subject, email_msg, email_date):
     try:
-
         # Initialize default values
         tracking_number = "Unknown"
         delivery_date = "Unknown"
 
-        # Extract the tracking number
-        tracking_number_match = re.search(r'(\d{10,})', email_msg)
-        tracking_number = tracking_number_match.group(1) if tracking_number_match else "Unknown"
-
-        # Extract the tracking number (DHL tracking numbers usually consist of 10 to 20 digits)
-        tracking_number_match = re.search(r'\b\d{10,20}\b', email_msg)
-        if tracking_number_match:
-            tracking_number = tracking_number_match.group(0)
+        # Extract all URLs from the email message
+        urls = re.findall(r'(https?://[^\s]+)', email_msg)
+        
+        for url in urls:
+            # Parse each URL to extract query parameters
+            parsed_url = urlparse(url)
+            query_params = parse_qs(parsed_url.query)
             
+            # Check if 'piececode' is present in the query parameters
+            if 'piececode' in query_params:
+                tracking_number = query_params['piececode'][0]
+                # Clean the tracking number (remove any trailing or leading non-alphanumeric characters)
+                tracking_number = re.sub(r'[^\w\d]', '', tracking_number)
+                break  # Stop after finding the first valid URL with 'piececode'
+        
         # Extract estimated delivery date
         delivery_date_match = re.search(r'am\s\w+, den (\d{2})\.(\d{2})\.', email_msg)
         if delivery_date_match:

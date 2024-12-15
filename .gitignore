@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 .DS_Store
 command.txt
+custom_components/package_deliveries/custom_scripts/package_deliveries.json

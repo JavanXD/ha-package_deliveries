@@ -21,7 +21,7 @@ This custom component allows you to track your package deliveries from various p
 - Is only able to parse Emails in **German language**.
 - Hermes, GLS and UPS notifications are missing.
 - You need to have an account at those delivery services and need to have enabled that they notify you via email.
-- Only supporting one email account at the time.
+- ~~Only supporting one email account at the time.~~
 
 ## Why a component for this?
 

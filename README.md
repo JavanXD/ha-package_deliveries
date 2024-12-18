@@ -12,9 +12,10 @@ This custom component allows you to track your package deliveries from various p
 ## Features
 
 - Fetches package delivery information from email accounts.
-- Supports Amazon, DHL, and DPD delivery services.
+- Supports Amazon Prime Delivery, DHL, and DPD delivery services.
 - Configurable parameters for folder selection, date range, and email limits.
 - Displays delivery details as sensor attributes.
+- Merges duplicates (e.g. when Amazon Prime used DHL as carrier).
 
 ## Current Limitations / To-Dos
 

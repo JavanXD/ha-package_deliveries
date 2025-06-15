@@ -1,13 +1,20 @@
-import datetime
+import logging
+import subprocess
+import json
+import os
 from datetime import timedelta
 from homeassistant.helpers.entity import Entity
 
+# Logging konfigurieren
+_LOGGER = logging.getLogger(__name__)
+
+MAX_EXECUTION_TIME = 60  # Maximale Ausführungsdauer des Skripts in Sekunden
 
 class PackageDeliveriesSensor(Entity):
-    """Sensor for tracking package deliveries via email."""
+    """Sensor für die Verfolgung von Paketlieferungen per E-Mail."""
 
     def __init__(self, hass, config):
-        """Initialize the sensor."""
+        """Initialisiere den Sensor."""
         self.hass = hass
         self._state = None
         self._attributes = {}
@@ -16,7 +23,8 @@ class PackageDeliveriesSensor(Entity):
             "custom_components", "package_deliveries", "custom_scripts", "check_package_deliveries.py"
         )
         self.json_file_path = hass.config.path(
-            "custom_components", "package_deliveries", "custom_scripts", f"deliveries_{self.config['name'].lower().replace(' ', '_')}.json"
+            "custom_components", "package_deliveries", "custom_scripts",
+            f"deliveries_{self.config['name'].lower().replace(' ', '_')}.json"
         )
         scan_interval = config.get("scan_interval", 180)
         if isinstance(scan_interval, timedelta):
@@ -29,32 +37,30 @@ class PackageDeliveriesSensor(Entity):
 
     @property
     def name(self):
-        """Return the name of the sensor."""
+        """Gibt den Namen des Sensors zurück."""
         return self._name
 
     @property
     def unique_id(self):
-        """Return the unique ID of the sensor."""
+        """Gibt die eindeutige ID des Sensors zurück."""
         return self._unique_id
 
     @property
     def state(self):
-        """Return the number of deliveries."""
+        """Gibt die Anzahl der Lieferungen zurück."""
         return self._state
 
     @property
     def extra_state_attributes(self):
-        """Return additional attributes."""
+        """Gibt zusätzliche Attribute zurück."""
         return self._attributes
 
-    def update(self):
-        """Call the script, then update the sensor from the JSON file."""
-        # Lazy imports to avoid blocking the event loop
-        import subprocess
-        import json
-        import os
+    async def async_update(self):
+        """Aktualisiert den Sensor asynchron durch Ausführen des Skripts und Laden des JSON-Ergebnisses."""
+        await self.hass.async_add_executor_job(self._run_and_update_from_script)
 
-        # Build the command dynamically from the config
+    def _run_and_update_from_script(self):
+        """Führt das Skript aus und aktualisiert den Sensor basierend auf der resultierenden JSON-Datei."""
         command = [
             "python3", self.script_path,
             "--email", self.config.get("email"),
@@ -67,37 +73,52 @@ class PackageDeliveriesSensor(Entity):
         ]
 
         try:
-            # Step 1: Call the script
-            subprocess.run(command, check=True)
+            _LOGGER.info(f"Starting script execution with command: {command}")
 
-            # Step 2: Read the JSON file to update the sensor state and attributes
+            subprocess.run(
+                command,
+                check=True,
+                timeout=MAX_EXECUTION_TIME,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+
             if os.path.exists(self.json_file_path):
                 with open(self.json_file_path, "r") as json_file:
                     deliveries = json.load(json_file)
                     self._state = len(deliveries)
                     self._attributes["deliveries"] = deliveries
+                    _LOGGER.info(f"Package deliveries updated: {len(deliveries)} deliveries found.")
             else:
-                self._state = "Error"
-                self._attributes["error"] = f"{self.json_file_path} file not found"
+                self._state = "error"
+                self._attributes["error"] = f"{self.json_file_path} Datei nicht gefunden"
+                _LOGGER.error(f"JSON file not found: {self.json_file_path}")
+
+        except subprocess.TimeoutExpired as e:
+            self._state = "unavailable"
+            self._attributes["error"] = f"Skript-Zeitüberschreitung: {e}"
+            _LOGGER.error(f"Script timed out after {MAX_EXECUTION_TIME} seconds: {e}")
 
         except subprocess.CalledProcessError as e:
-            self._state = "Error"
-            self._attributes["error"] = f"Script error: {e}"
+            self._state = "error"
+            self._attributes["error"] = f"Skriptfehler: {e}"
+            _LOGGER.error(f"Script execution failed: {e}")
 
         except Exception as e:
-            self._state = "Error"
+            self._state = "error"
             self._attributes["error"] = str(e)
-
+            _LOGGER.error(f"Unexpected error occurred: {e}")
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the sensor platform."""
-    # Ensure the "name" field is provided
+    """Richtet die Sensorplattform ein."""
     if "name" not in config:
-        raise ValueError("The 'name' field is required for the package_deliveries sensor.")
+        raise ValueError("Das Feld 'name' ist für den package_deliveries-Sensor erforderlich.")
 
     sensor = PackageDeliveriesSensor(hass, config)
-    async_add_entities([sensor], True)
+    async_add_entities([sensor], False)  # Verhindert sofortiges Update beim Setup
 
-    # Store each sensor in `hass.data` for later reference
+    # Optional: Async-Initialisierung im Hintergrund
+    hass.loop.create_task(sensor.async_update())
+
     hass.data.setdefault("package_deliveries", {})
     hass.data["package_deliveries"][sensor.unique_id] = sensor
